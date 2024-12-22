@@ -6,9 +6,20 @@ from tqdm import tqdm
 
 def load_speeches(file_path):
     """Load and preprocess the speeches file"""
-    with open(file_path, 'r', encoding='utf-8') as f:
-        speeches = f.readlines()
-    return speeches
+    # Try different encodings
+    encodings = ['utf-8', 'latin-1', 'cp1252', 'iso-8859-1']
+    
+    for encoding in encodings:
+        try:
+            with open(file_path, 'r', encoding=encoding, errors='replace') as f:
+                speeches = f.readlines()
+                print(f"Successfully loaded file with {encoding} encoding")
+                return speeches
+        except Exception as e:
+            print(f"Failed with {encoding} encoding: {str(e)}")
+            continue
+    
+    raise ValueError("Could not read file with any of the attempted encodings")
 
 def extract_key_terms(speeches, nlp, min_freq=5, max_terms=1000):
     """Extract key terms from speeches using NLP"""
