@@ -20,7 +20,7 @@ bash ./scripts/run_HF.sh
 
 - `--openai_key`: your openai key
 - `--taxo_name`: ['wordnet', 'semeval_sci', 'wiki', 'dblp']
-- `--model`: ['gpt-3.5-turbo-16k', 'gpt-4-turbo-preview']
+- `--model`: ['gpt-4o-mini']
 - `--numofExamples`: 0 for zero-shot and 5 for five shot
 - `--run`: set to `False` to only evaluate the saved results
 - `--save_path_model_response`: the save path of model response

@@ -129,7 +129,7 @@ if __name__ == '__main__':
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
-    model_path = args.model_name
+    model_path = args.model_path
     save_path = args.save_path
     taxo_name = args.taxo_name
     tokenizer, model = load_pretrained(model_path, device)

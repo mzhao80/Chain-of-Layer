@@ -94,10 +94,10 @@ def call_api_interative (client, messages, model, check = False):
     
     save the response into save_path + 'model_response.npy' and save_path + 'model_response.json'
     '''
-    if model == 'gpt-3.5-turbo-16k':
-        max_tokens = 8000
-    elif model == 'gpt-4-1106-preview':
-        max_tokens = 4000
+    if model == 'gpt-4o-mini':
+        max_tokens = 16384
+    else:
+        raise ValueError(f'model {model} is not supported')
     
     multi_times_response = []
     multi_times_message = []
@@ -301,7 +301,7 @@ def run(client, taxo_name, taxo_path, model, save_path_model_response, numofExam
     save_path = save_path_model_response
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-        
+    
     if ChainofLayers and iteratively:
         if filter_topk is not None:
             save_path = f'{save_path}{taxo_name}_top{filter_topk}/'
@@ -312,7 +312,8 @@ def run(client, taxo_name, taxo_path, model, save_path_model_response, numofExam
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
         
-    save_path = save_path + taxo_name + '/'
+    else:
+        save_path = save_path + taxo_name + '/'
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     save_path = save_path + model + '/'
@@ -432,15 +433,16 @@ if __name__ == '__main__':
     elif args.filter_mode == 'lm_score_ensemble':
         filter_mode = 'lm_score_ensemble'
         #mapping = {'wiki': 'wiki_downsample', 'dblp': 'dblp_sampled_downsample', 'semeval_sci': 'semeval_sci_downsample', 'wordnet': 'wordnet'}
-        mapping = {'wiki_downsample': 'wiki_downsample', 'dblp_sampled_downsample': 'dblp_sampled_downsample', 'semeval_sci_downsample': 'semeval_sci_downsample', 'wordnet': 'wordnet'}
-        filter_path = f'./filter/{args.filter_model}/{mapping[taxo_name]}/scores.json'
+        #mapping = {'wiki_downsample': 'wiki_downsample', 'dblp_sampled_downsample': 'dblp_sampled_downsample', 'semeval_sci_downsample': 'semeval_sci_downsample', 'wordnet': 'wordnet'}
+        mapping = {'wiki': 'wiki'}
+        filter_path = f'./filter/{args.filter_model.split("/")[1]}/{mapping[taxo_name]}/scores.json'
         filter_scores_list = open(filter_path, 'r').readlines()
         filter_scores_list = [json.loads(filter_scores) for filter_scores in filter_scores_list]
         filter_topk = args.filter_topk
     
     #print(taxo_name, taxo_path, model, numofExamples, save_path_model_response, demo_path)
     if args.run == 'True':
-        run(client, taxo_name, taxo_path, model, save_path_model_response, numofExamples = numofExamples, new_prompt = new_prompt, ChainofLayers = ChainofLayers)
+        run(client, taxo_name, taxo_path, model, save_path_model_response, numofExamples = numofExamples, new_prompt = new_prompt, ChainofLayers = ChainofLayers, filter_topk=filter_topk, filter_scores_list=filter_scores_list, iteratively = iteratively)
         eval(taxo_name, taxo_path, model, save_path_model_response, numofExamples = numofExamples, new_prompt = new_prompt, ChainofLayers = ChainofLayers, iteratively = iteratively, filter_mode = filter_mode, filter_topk = filter_topk, filter_scores_list = filter_scores_list)
     else:
         eval(taxo_name, taxo_path, model, save_path_model_response, numofExamples = numofExamples, new_prompt = new_prompt, ChainofLayers = ChainofLayers, iteratively = iteratively, filter_mode = filter_mode, filter_topk = filter_topk, filter_scores_list = filter_scores_list)

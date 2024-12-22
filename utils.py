@@ -358,10 +358,10 @@ def call_api (client, prompt_list, save_path, model, times = 1, check = False, n
     
     save the response into save_path + 'model_response.npy' and save_path + 'model_response.json'
     '''
-    if model == 'gpt-3.5-turbo-16k':
-        max_tokens = 8000
-    elif model == 'gpt-4-1106-preview':
-        max_tokens = 4000
+    if model == 'gpt-4o-mini':
+        max_tokens = 16384
+    else:
+        raise ValueError(f'model {model} is not supported')
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     try:
