@@ -3,3 +3,4 @@ torch
 openai
 spacy
 tqdm
+graphviz
