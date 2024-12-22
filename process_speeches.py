@@ -68,7 +68,7 @@ def main():
     
     # Process speeches
     print("Loading speeches...")
-    speeches = load_speeches("speeches_114.txt")
+    speeches = load_speeches("speeches/speeches_114.txt")
     
     # Extract terms
     terms = extract_key_terms(speeches, nlp)
